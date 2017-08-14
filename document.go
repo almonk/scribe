@@ -3,8 +3,6 @@ package main
 import (
 	"fmt"
 	s "strings"
-
-	"github.com/almonk/css"
 )
 
 func isDocumentable(class string) bool {
@@ -19,7 +17,7 @@ func isDocumentable(class string) bool {
 	return true
 }
 
-func documentClass(class string, rule map[string]*css.CSSStyleDeclaration, template string) string {
+func documentClass(class string, template string) string {
 	template = s.TrimSpace(template)
 	class = s.Trim(class, ".")
 	outputHTML := s.Replace(template, "{{class}}", class, 1)
