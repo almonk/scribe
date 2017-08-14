@@ -30,7 +30,6 @@ func readDir() string {
 
 func isValidModule(filename string) bool {
 	// Check the file has the hallmarks of a css module
-
 	if isOnBlocklist(filename) {
 		return false
 	}
@@ -88,7 +87,7 @@ func parseModule(filename os.FileInfo) string {
 
 	for _, section := range cssMap {
 		templateMatch := "<template>(.*?)</template>"
-		moduleNameMatch := "@scribe (.*?)<template>"
+		moduleNameMatch := "@scribe (.*?)<"
 		commentMatch := `\/\*(.*?)@scribe(.*?)\*\/`
 		cssSelectorMatch := ".(.*?) {.*?}"
 

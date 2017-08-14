@@ -19,7 +19,7 @@ func isDocumentable(class string) bool {
 func documentClass(class string, template string) string {
 	template = s.TrimSpace(template)
 	class = s.Trim(class, ".")
-	outputHTML := s.Replace(template, "{{class}}", class, 1)
+	outputHTML := s.Replace(template, "{{class}}", class, -1)
 	return outputHTML
 }
 
