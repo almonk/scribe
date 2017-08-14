@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	s "strings"
 )
 
@@ -24,10 +23,10 @@ func documentClass(class string, template string) string {
 	return outputHTML
 }
 
-func writeHTMLHeader() {
-	fmt.Println("<html><head><link rel=stylesheet href='https://www.herokucdn.com/purple3/latest/purple3.min.css'></head><body>")
+func writeHTMLHeader() string {
+	return ("<html><head><link rel=stylesheet href='https://www.herokucdn.com/purple3/latest/purple3.min.css'></head><body>")
 }
 
-func writeHTMLFooter() {
-	fmt.Println("</body></html>")
+func writeHTMLFooter() string {
+	return ("</body></html>")
 }

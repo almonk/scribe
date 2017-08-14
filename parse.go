@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -18,13 +17,15 @@ func checkErr(err error) {
 	}
 }
 
-func readDir() {
+func readDir() string {
+	output := ""
 	files, _ := ioutil.ReadDir(workingDirectory)
 	for _, f := range files {
 		if isValidModule(f.Name()) {
-			parseModule(f)
+			output = output + parseModule(f)
 		}
 	}
+	return output
 }
 
 func isValidModule(filename string) bool {
@@ -54,7 +55,9 @@ func isOnBlocklist(filenameToCheck string) bool {
 	return false
 }
 
-func parseModule(filename os.FileInfo) {
+func parseModule(filename os.FileInfo) string {
+	outputString := ""
+
 	file, err := os.Open(workingDirectory + filename.Name())
 	checkErr(err)
 	defer file.Close()
@@ -94,7 +97,7 @@ func parseModule(filename os.FileInfo) {
 		if hasTemplate {
 			m, _ := regexp.Compile(moduleNameMatch)
 			extractedModuleName := m.FindStringSubmatch(section)
-			fmt.Println("<br><div class='ma4 f2 dark-gray'>" + extractedModuleName[1] + "</div>")
+			outputString = outputString + "<br><div class='ma4 f2 dark-gray'>" + extractedModuleName[1] + "</div>"
 
 			r, _ := regexp.Compile(templateMatch)
 			extractedTemplate := r.FindStringSubmatch(section)
@@ -108,22 +111,15 @@ func parseModule(filename os.FileInfo) {
 			for index := range cssSelectors {
 				if s.HasPrefix(cssSelectors[index], ".") {
 					class := s.Split(cssSelectors[index], "{")
-					fmt.Println("<br><span class='code ma4'>" + class[0] + "</span><br>")
-					fmt.Println(documentClass(class[0], extractedTemplate[1]))
+
+					outputString = outputString + "<br><span class='code ma4'>" + class[0] + "</span><br>"
+					outputString = outputString + documentClass(class[0], extractedTemplate[1])
 				}
 			}
-
-			// ss := css.Parse(cssToParse)
-			// rules := ss.GetCSSRuleList()
-
-			// for _, rule := range rules {
-			// 	if isDocumentable(rule.Style.SelectorText) {
-			// 		fmt.Println("<br><span class='code ma4'>" + rule.Style.SelectorText + "</span>")
-			// 		fmt.Println(documentClass(rule.Style.SelectorText, rule.Style.Styles, extractedTemplate[1]))
-			// 	}
-			// }
 		}
 	}
+
+	return outputString
 }
 
 func readModule(file string, folder string) string {
