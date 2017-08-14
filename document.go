@@ -8,12 +8,7 @@ import (
 )
 
 func isDocumentable(class string) bool {
-	var redflags = []string{
-		":",
-		"@yank",
-		"hk-button-group",
-		"(-",
-	}
+	var redflags = []string{}
 
 	for _, term := range redflags {
 		if s.Contains(class, term) {

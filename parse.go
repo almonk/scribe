@@ -45,21 +45,7 @@ func isValidModule(filename string) bool {
 
 func isOnBlocklist(filenameToCheck string) bool {
 	// Css modules we don't want to document
-	var blocklist = []string{
-		"_background-position",
-		"_background-size",
-		"_clears",
-		"_debug",
-		"_debug-grid",
-		"_debug-children",
-		"_display",
-		"_floats",
-		"_hk",
-		"_hk-base",
-		"_hk--compiled",
-		"_hk-spinner",
-		"_malibu",
-	}
+	var blocklist = []string{}
 
 	for _, term := range blocklist {
 		if s.Contains(filenameToCheck, term) {
@@ -77,24 +63,31 @@ func parseModule(filename os.FileInfo) {
 
 	cssMap := make([]string, 1)
 	noOfSection := 0
+	isInScribeSection := false
 
 	fileScanner := bufio.NewScanner(file)
 
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
 
-		if s.Contains(line, "@scribe") {
+		if s.Contains(line, "/*") {
 			cssMap = append(cssMap, line)
+			isInScribeSection = true
 			noOfSection++
-		} else {
+		}
+
+		if isInScribeSection {
 			cssMap[noOfSection] = cssMap[noOfSection] + line
+		}
+
+		if s.Contains(line, "@scribe nodoc") {
+			isInScribeSection = false
 		}
 	}
 
 	for _, section := range cssMap {
 		templateMatch := "<template>(.*?)</template>"
-		moduleNameMatch := "@scribe \"(.*?)\""
-		iterativeClassMatch := "{{class}}"
+		moduleNameMatch := "@scribe(.*)<template>"
 		commentMatch := "/*(.*?)*/"
 
 		hasTemplate, _ := regexp.MatchString(templateMatch, section)
@@ -102,24 +95,21 @@ func parseModule(filename os.FileInfo) {
 		if hasTemplate {
 			m, _ := regexp.Compile(moduleNameMatch)
 			extractedModuleName := m.FindStringSubmatch(section)
-			fmt.Println(extractedModuleName[1])
+			fmt.Println("<br><div class='ma4 f2 dark-gray'>" + extractedModuleName[1] + "</div>")
 
 			r, _ := regexp.Compile(templateMatch)
 			extractedTemplate := r.FindStringSubmatch(section)
-			// fmt.Println("Template:" + extractedTemplate[1])
 
 			n, _ := regexp.Compile(commentMatch)
 			cssToParse := n.ReplaceAllString(section, "")
 
-			shouldLoop, _ := regexp.MatchString(iterativeClassMatch, section)
-			fmt.Println(shouldLoop)
-
 			ss := css.Parse(cssToParse)
+			// fmt.Println("\nCSS:" + cssToParse)
 			rules := ss.GetCSSRuleList()
 
 			for _, rule := range rules {
 				if isDocumentable(rule.Style.SelectorText) {
-					fmt.Println("<br><span class='code'>" + rule.Style.SelectorText + "</span>")
+					fmt.Println("<br><span class='code ma4'>" + rule.Style.SelectorText + "</span>")
 					fmt.Println(documentClass(rule.Style.SelectorText, rule.Style.Styles, extractedTemplate[1]))
 				}
 			}
