@@ -102,11 +102,11 @@ func parseModule(filename os.FileInfo) {
 		if hasTemplate {
 			m, _ := regexp.Compile(moduleNameMatch)
 			extractedModuleName := m.FindStringSubmatch(section)
-			fmt.Println("Module name: " + extractedModuleName[1])
+			fmt.Println(extractedModuleName[1])
 
 			r, _ := regexp.Compile(templateMatch)
 			extractedTemplate := r.FindStringSubmatch(section)
-			fmt.Println("Template:" + extractedTemplate[1])
+			// fmt.Println("Template:" + extractedTemplate[1])
 
 			n, _ := regexp.Compile(commentMatch)
 			cssToParse := n.ReplaceAllString(section, "")
@@ -119,7 +119,8 @@ func parseModule(filename os.FileInfo) {
 
 			for _, rule := range rules {
 				if isDocumentable(rule.Style.SelectorText) {
-					documentClass(rule.Style.SelectorText, rule.Style.Styles, extractedTemplate[1])
+					fmt.Println("<br><span class='code'>" + rule.Style.SelectorText + "</span>")
+					fmt.Println(documentClass(rule.Style.SelectorText, rule.Style.Styles, extractedTemplate[1]))
 				}
 			}
 		}

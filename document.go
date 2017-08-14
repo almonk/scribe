@@ -12,7 +12,7 @@ func isDocumentable(class string) bool {
 		":",
 		"@yank",
 		"hk-button-group",
-		"--",
+		"(-",
 	}
 
 	for _, term := range redflags {
@@ -24,9 +24,17 @@ func isDocumentable(class string) bool {
 	return true
 }
 
-func documentClass(class string, rule map[string]*css.CSSStyleDeclaration, template string) {
+func documentClass(class string, rule map[string]*css.CSSStyleDeclaration, template string) string {
 	template = s.TrimSpace(template)
 	class = s.Trim(class, ".")
 	outputHTML := s.Replace(template, "{{class}}", class, 1)
-	fmt.Printf(outputHTML)
+	return outputHTML
+}
+
+func writeHTMLHeader() {
+	fmt.Println("<html><head><link rel=stylesheet href='https://www.herokucdn.com/purple3/latest/purple3.min.css'></head><body>")
+}
+
+func writeHTMLFooter() {
+	fmt.Println("</body></html>")
 }
