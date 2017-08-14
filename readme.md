@@ -9,7 +9,7 @@ Scribe notation is simple. Simply add a comment block above CSS you'd like to do
 
 ```
 /*
-@scibe Border colors
+@scribe Border colors
 
 <template>
   <div class="{{class}}"></div>
