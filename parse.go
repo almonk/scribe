@@ -8,6 +8,8 @@ import (
 	"os"
 	"regexp"
 	s "strings"
+
+	"github.com/almonk/css"
 )
 
 var workingDirectory = ""
@@ -34,7 +36,7 @@ func isValidModule(filename string) bool {
 		return false
 	}
 
-	if s.HasPrefix(filename, "_") && s.HasSuffix(filename, ".css") {
+	if s.HasSuffix(filename, ".css") {
 		return true
 	}
 
@@ -81,7 +83,7 @@ func parseModule(filename os.FileInfo) {
 	for fileScanner.Scan() {
 		line := fileScanner.Text()
 
-		if s.HasPrefix(line, "@scribe") {
+		if s.Contains(line, "@scribe") {
 			cssMap = append(cssMap, line)
 			noOfSection++
 		} else {
@@ -89,27 +91,39 @@ func parseModule(filename os.FileInfo) {
 		}
 	}
 
-	fmt.Println(cssMap)
-
 	for _, section := range cssMap {
 		templateMatch := "<template>(.*?)</template>"
+		moduleNameMatch := "@scribe \"(.*?)\""
+		iterativeClassMatch := "{{class}}"
+		commentMatch := "/*(.*?)*/"
+
 		hasTemplate, _ := regexp.MatchString(templateMatch, section)
 
 		if hasTemplate {
-			fmt.Println("SECTION====")
+			m, _ := regexp.Compile(moduleNameMatch)
+			extractedModuleName := m.FindStringSubmatch(section)
+			fmt.Println("Module name: " + extractedModuleName[1])
+
 			r, _ := regexp.Compile(templateMatch)
 			extractedTemplate := r.FindStringSubmatch(section)
-			fmt.Println(extractedTemplate[1])
+			fmt.Println("Template:" + extractedTemplate[1])
+
+			n, _ := regexp.Compile(commentMatch)
+			cssToParse := n.ReplaceAllString(section, "")
+
+			shouldLoop, _ := regexp.MatchString(iterativeClassMatch, section)
+			fmt.Println(shouldLoop)
+
+			ss := css.Parse(cssToParse)
+			rules := ss.GetCSSRuleList()
+
+			for _, rule := range rules {
+				if isDocumentable(rule.Style.SelectorText) {
+					documentClass(rule.Style.SelectorText, rule.Style.Styles, extractedTemplate[1])
+				}
+			}
 		}
 	}
-	// ss := css.Parse(fileBuffer)
-	// rules := ss.GetCSSRuleList()
-
-	// for _, rule := range rules {
-	// 	if isDocumentable(rule.Style.SelectorText) {
-	// 		documentClass(rule.Style.SelectorText, rule.Style.Styles)
-	// 	}
-	// }
 }
 
 func readModule(file string, folder string) string {

@@ -10,9 +10,9 @@ import (
 func isDocumentable(class string) bool {
 	var redflags = []string{
 		":",
-		",",
 		"@yank",
 		"hk-button-group",
+		"--",
 	}
 
 	for _, term := range redflags {
@@ -24,34 +24,9 @@ func isDocumentable(class string) bool {
 	return true
 }
 
-func documentClass(class string, rule map[string]*css.CSSStyleDeclaration) {
+func documentClass(class string, rule map[string]*css.CSSStyleDeclaration, template string) {
+	template = s.TrimSpace(template)
 	class = s.Trim(class, ".")
-
-	if s.HasPrefix(class, "b--") {
-		documentBorderColor(class)
-	}
-
-	if s.HasPrefix(class, "hk-button") {
-		documentHkButton(class)
-	}
-}
-
-func sanitizeModuleToHumanName(moduleName string) string {
-	r := s.NewReplacer(
-		"_", "",
-		"-", " ",
-		".css", "",
-	)
-
-	humanName := r.Replace(moduleName)
-	humanName = s.Title(humanName)
-	return humanName
-}
-
-func documentBorderColor(class string) {
-	fmt.Printf("<div class='pa2 ba %s'></div>", class)
-}
-
-func documentHkButton(class string) {
-	fmt.Printf("<button class='%s'>Lorem</button>", class)
+	outputHTML := s.Replace(template, "{{class}}", class, 1)
+	fmt.Printf(outputHTML)
 }

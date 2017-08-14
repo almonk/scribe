@@ -1,5 +1,5 @@
 /*
-@scribe Border colors
+@scribe "Border colors"
 
 <template>
   <div class="alert-warning ba pa2 {{class}}"></div>
@@ -15,7 +15,7 @@
 }
 
 /*
-@scribe Border widths
+@scribe "Border widths"
 
 <template>
   <div class="ba pa2 {{class}}"></div>
@@ -24,4 +24,16 @@
 
 .b--solid {
   border-width: 5px;
+}
+
+/*
+@scribe "Flex"
+
+<template>
+  <div></div>
+</template>
+*/
+
+.flex {
+
 }
