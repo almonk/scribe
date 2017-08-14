@@ -1,9 +1,9 @@
 /*
-<scribe-doc>
-  <template>
-    <div class="pab2 ba"></div>
-  </template>
-</scribe-dov>
+@scribe Border colors
+
+<template>
+  <div class="alert-warning ba pa2 {{class}}"></div>
+</template>
 */
 
 .b--green {
@@ -12,4 +12,16 @@
 
 .b--blue {
   border-color: blue;
+}
+
+/*
+@scribe Border widths
+
+<template>
+  <div class="ba pa2 {{class}}"></div>
+</template>
+*/
+
+.b--solid {
+  border-width: 5px;
 }

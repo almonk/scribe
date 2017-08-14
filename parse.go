@@ -1,13 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"regexp"
 	s "strings"
-
-	"github.com/almonk/css"
 )
 
 var workingDirectory = ""
@@ -69,17 +69,47 @@ func isOnBlocklist(filenameToCheck string) bool {
 }
 
 func parseModule(filename os.FileInfo) {
-	fmt.Println(sanitizeModuleToHumanName(filename.Name()))
+	file, err := os.Open(workingDirectory + filename.Name())
+	checkErr(err)
+	defer file.Close()
 
-	fileBuffer := readModule(filename.Name(), workingDirectory)
-	ss := css.Parse(fileBuffer)
-	rules := ss.GetCSSRuleList()
+	cssMap := make([]string, 1)
+	noOfSection := 0
 
-	for _, rule := range rules {
-		if isDocumentable(rule.Style.SelectorText) {
-			documentClass(rule.Style.SelectorText, rule.Style.Styles)
+	fileScanner := bufio.NewScanner(file)
+
+	for fileScanner.Scan() {
+		line := fileScanner.Text()
+
+		if s.HasPrefix(line, "@scribe") {
+			cssMap = append(cssMap, line)
+			noOfSection++
+		} else {
+			cssMap[noOfSection] = cssMap[noOfSection] + line
 		}
 	}
+
+	fmt.Println(cssMap)
+
+	for _, section := range cssMap {
+		templateMatch := "<template>(.*?)</template>"
+		hasTemplate, _ := regexp.MatchString(templateMatch, section)
+
+		if hasTemplate {
+			fmt.Println("SECTION====")
+			r, _ := regexp.Compile(templateMatch)
+			extractedTemplate := r.FindStringSubmatch(section)
+			fmt.Println(extractedTemplate[1])
+		}
+	}
+	// ss := css.Parse(fileBuffer)
+	// rules := ss.GetCSSRuleList()
+
+	// for _, rule := range rules {
+	// 	if isDocumentable(rule.Style.SelectorText) {
+	// 		documentClass(rule.Style.SelectorText, rule.Style.Styles)
+	// 	}
+	// }
 }
 
 func readModule(file string, folder string) string {
