@@ -96,7 +96,7 @@ func parseModule(filename os.FileInfo) string {
 		if hasTemplate {
 			m, _ := regexp.Compile(moduleNameMatch)
 			extractedModuleName := m.FindStringSubmatch(section)
-			outputString = outputString + "<br><div class='ma4 f2 dark-gray'>" + extractedModuleName[1] + "</div>"
+			outputString = outputString + "<br><div class='ma4 f2 dark-gray cb'>" + extractedModuleName[1] + "</div>"
 
 			r, _ := regexp.Compile(templateMatch)
 			extractedTemplate := r.FindStringSubmatch(section)
@@ -111,7 +111,7 @@ func parseModule(filename os.FileInfo) string {
 				if s.HasPrefix(cssSelectors[index], ".") {
 					class := s.Split(cssSelectors[index], "{")
 
-					outputString = outputString + "<br><span class='code ma4'>" + class[0] + "</span><br>"
+					// outputString = outputString + "<br><span class='code ma4'>" + class[0] + "</span><br>"
 					outputString = outputString + documentClass(class[0], extractedTemplate[1])
 				}
 			}
