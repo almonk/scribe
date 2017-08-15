@@ -41,6 +41,18 @@ func isValidModule(filename string) bool {
 	return false
 }
 
+func isDocumentable(class string) bool {
+	var redflags = []string{}
+
+	for _, term := range redflags {
+		if s.Contains(class, term) {
+			return false
+		}
+	}
+
+	return true
+}
+
 func isOnBlocklist(filenameToCheck string) bool {
 	// Css modules we don't want to document
 	var blocklist = []string{}

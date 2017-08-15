@@ -8,7 +8,7 @@ import (
 
 func main() {
 	inputDirPtr := flag.String("input", "myfile", "Folder containing css modules")
-	outputDoc := "test.html"
+	outputDoc := "docs/index.html"
 	flag.Parse()
 
 	// Let's get this show on the road
@@ -17,13 +17,7 @@ func main() {
 	outputFile, err := os.Create(outputDoc)
 	checkErr(err)
 
-	outputFile.WriteString(writeHTMLHeader())
-	outputFile.Sync()
-
-	outputFile.WriteString(readDir())
-	outputFile.Sync()
-
-	outputFile.WriteString(writeHTMLFooter())
+	outputFile.WriteString(writeHTML())
 	outputFile.Sync()
 
 	fmt.Println("Docs generated at ./" + outputDoc)

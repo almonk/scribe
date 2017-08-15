@@ -1,19 +1,14 @@
 package main
 
 import (
+	"bytes"
+	"html/template"
 	s "strings"
 )
 
-func isDocumentable(class string) bool {
-	var redflags = []string{}
-
-	for _, term := range redflags {
-		if s.Contains(class, term) {
-			return false
-		}
-	}
-
-	return true
+type contents struct {
+	DocsContents template.HTML
+	TocContents  template.HTML
 }
 
 func documentClass(class string, template string) string {
@@ -23,10 +18,13 @@ func documentClass(class string, template string) string {
 	return outputHTML
 }
 
-func writeHTMLHeader() string {
-	return ("<html><head><link rel=stylesheet href='https://www.herokucdn.com/purple3/latest/purple3.min.css'></head><body>")
-}
+func writeHTML() string {
+	data := contents{DocsContents: template.HTML(readDir())}
+	partial := readModule("layout.html", "docs-templates")
+	tmpl, err := template.New("").Parse(partial)
+	checkErr(err)
 
-func writeHTMLFooter() string {
-	return ("</body></html>")
+	var tpl bytes.Buffer
+	tmpl.Execute(&tpl, data)
+	return tpl.String()
 }

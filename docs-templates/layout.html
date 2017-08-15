@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <title>purple3 Documentation</title>
+  <meta name="author" content="">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.herokucdn.com/purple3/latest/purple3.min.css">
+  <link rel="shortcut icon" type="image/x-icon" href="https://www.herokucdn.com/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/color-brewer.min.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+  <script src="https://cdn.rawgit.com/bendc/anchor-scroll/master/scroll.min.js"></script>
+
+  <style>
+    .content {
+      padding-left: 260px;
+    }
+  </style>
+</head>
+<body>
+  <div class="">
+    <div class="sidebar w6 bg-white fixed bg-white top-0 bottom-0 shadow-outer-2">
+      <div class="ttu f6 gray ph2 pv1">Header</div>
+      <ul class="list ma0 pa0">
+        <li><a href="#" class="link dark-gray pa2 db hover-bg-light-silver">Test</a></li>
+      </ul>
+       {{.TocContents}}
+    </div>
+    <div class="content w-100 pa3 ph5-ns bg-white">
+       {{.DocsContents}}
+    </div>
+  </div>
+</body>
+</html>
