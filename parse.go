@@ -22,7 +22,18 @@ func readDir() string {
 	files, _ := ioutil.ReadDir(workingDirectory)
 	for _, f := range files {
 		if isValidModule(f.Name()) {
-			output = output + parseModule(f)
+			output = output + parseModule(f, false)
+		}
+	}
+	return output
+}
+
+func buildToc() string {
+	output := ""
+	files, _ := ioutil.ReadDir(workingDirectory)
+	for _, f := range files {
+		if isValidModule(f.Name()) {
+			output = output + parseModule(f, true)
 		}
 	}
 	return output
@@ -66,7 +77,7 @@ func isOnBlocklist(filenameToCheck string) bool {
 	return false
 }
 
-func parseModule(filename os.FileInfo) string {
+func parseModule(filename os.FileInfo, justHeaders bool) string {
 	outputString := ""
 
 	file, err := os.Open(workingDirectory + filename.Name())
@@ -108,7 +119,12 @@ func parseModule(filename os.FileInfo) string {
 		if hasTemplate {
 			m, _ := regexp.Compile(moduleNameMatch)
 			extractedModuleName := m.FindStringSubmatch(section)
-			outputString = outputString + "<br><div class='ma4 f2 dark-gray cb'>" + extractedModuleName[1] + "</div>"
+
+			if justHeaders {
+				outputString = outputString + "<li><a href='#' class='link dark-gray pa2 db hover-bg-light-silver'>" + extractedModuleName[1] + "</a></li>"
+			} else {
+				outputString = outputString + "<br><div class='ma4 f2 dark-gray cb'>" + extractedModuleName[1] + "</div>"
+			}
 
 			r, _ := regexp.Compile(templateMatch)
 			extractedTemplate := r.FindStringSubmatch(section)
@@ -119,14 +135,16 @@ func parseModule(filename os.FileInfo) string {
 			o, _ := regexp.Compile(cssSelectorMatch)
 			cssSelectors := o.FindAllString(cssToParse, -1)
 
-			for index := range cssSelectors {
-				if s.HasPrefix(cssSelectors[index], ".") {
-					class := s.Split(cssSelectors[index], "{")
+			if !justHeaders {
+				for index := range cssSelectors {
+					if s.HasPrefix(cssSelectors[index], ".") {
+						class := s.Split(cssSelectors[index], "{")
 
-					// outputString = outputString + "<br><span class='code ma4'>" + class[0] + "</span><br>"
-					outputString = outputString + documentClass(class[0], extractedTemplate[1])
+						outputString = outputString + documentClass(class[0], extractedTemplate[1])
+					}
 				}
 			}
+
 		}
 	}
 

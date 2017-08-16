@@ -19,7 +19,10 @@ func documentClass(class string, template string) string {
 }
 
 func writeHTML() string {
-	data := contents{DocsContents: template.HTML(readDir())}
+	data := contents{
+		DocsContents: template.HTML(readDir()),
+		TocContents:  template.HTML(buildToc()),
+	}
 	partial := readModule("layout.html", "docs-templates")
 	tmpl, err := template.New("").Parse(partial)
 	checkErr(err)
