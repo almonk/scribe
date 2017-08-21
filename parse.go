@@ -78,6 +78,7 @@ func isOnBlocklist(filenameToCheck string) bool {
 }
 
 func parseModule(filename os.FileInfo, justHeaders bool) string {
+	// TODO: Refactor to return a map
 	outputString := ""
 
 	file, err := os.Open(workingDirectory + filename.Name())
