@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"html"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -101,10 +101,7 @@ func parseModule(filename os.FileInfo, justHeaders bool) string {
 		if s.Contains(line, "/*") {
 			isInScribeSection = true
 			cssMap = append(cssMap, "/* "+line+"\n")
-
-			if noOfLines > 1 {
-				noOfSection++
-			}
+			noOfSection++
 		}
 
 		if isInScribeSection {
@@ -120,50 +117,42 @@ func parseModule(filename os.FileInfo, justHeaders bool) string {
 
 	for i, section := range cssMap {
 		templateMatch := `<template>\s(.*?)\s</template>`
-		moduleNameMatch := `@scribe(.*?)\n`
-		commentMatch := `\/\*(.*?)@scribe(.*?)\*\/`
+		sectionNameMatch := `@scribe (.*?)\n`
+		// commentMatch := `\/\*(.*?)@scribe(.*?)\*\/`
 		cssSelectorMatch := ".(.*?) {.*?}"
 
 		hasTemplate, _ := regexp.MatchString(templateMatch, section)
+		hasSubSection, _ := regexp.MatchString(sectionNameMatch, section)
+
+		matchSectionName, _ := regexp.Compile(sectionNameMatch)
+		extractedSectionName := matchSectionName.FindStringSubmatch(section)
+
+		matchTemplate, _ := regexp.Compile(templateMatch)
+		extractedTemplate := matchTemplate.FindStringSubmatch(section)
+
+		matchCSSSelector, _ := regexp.Compile(cssSelectorMatch)
+		extractedCSSSelectors := matchCSSSelector.FindAllString(section, -1)
 
 		if hasTemplate {
-			if justHeaders {
-				outputString = outputString + "<li><a href='#" + slugifyModuleName(*file) + "' class='link dark-gray pa2 db hover-bg-light-silver'>" + humanizeModuleName(*file) + "</a></li>"
-			} else {
-				outputString = outputString + "<div class='mv5 bb b--light-gray' id='" + slugifyModuleName(*file) + "'></div><div class='mv4 f3 dark-gray'>" + humanizeModuleName(*file) + "</div>"
+			if i == 1 {
+				fmt.Println(humanizeModuleName(*file))
 			}
 
-			m, _ := regexp.Compile(moduleNameMatch)
-			extractedModuleName := m.FindStringSubmatch(section)
-
-			if justHeaders && len(extractedModuleName[1]) > 0 {
-				outputString = outputString + "<li><a href='#' class='link dark-gray pa2 db hover-bg-light-silver'>" + extractedModuleName[1] + "</a></li>"
+			if hasSubSection {
+				// Has other scribe sections in the module
+				fmt.Println(extractedSectionName[1])
 			}
 
-			if !justHeaders && i > 0 {
-				outputString = outputString + "<h4 class='gray ttu f6 mt2 dib'>" + extractedModuleName[1] + "</h4>"
-			}
+			fmt.Println(extractedTemplate[1])
 
-			r, _ := regexp.Compile(templateMatch)
-			extractedTemplate := r.FindStringSubmatch(section)
+			for index := range extractedCSSSelectors {
+				// Loop thru every CSS selector
+				if isValidCSSClass(extractedCSSSelectors[index]) {
+					cssClass := cssSelectorFromDefinition(extractedCSSSelectors[index])
 
-			n, _ := regexp.Compile(commentMatch)
-			cssToParse := n.ReplaceAllString(section, "")
-
-			o, _ := regexp.Compile(cssSelectorMatch)
-			cssSelectors := o.FindAllString(cssToParse, -1)
-
-			if !justHeaders {
-				for index := range cssSelectors {
-					if s.HasPrefix(cssSelectors[index], ".") {
-						class := s.Split(cssSelectors[index], " {")
-
-						outputString = outputString + "<pre class='bg-light-silver pa2 mt2'>" + html.EscapeString(class[0]) + "</pre>"
-						outputString = outputString + documentClass(class[0], extractedTemplate[1])
-					}
+					fmt.Println(cssClass)
 				}
 			}
-
 		}
 	}
 
@@ -180,6 +169,18 @@ func humanizeModuleName(file os.File) string {
 
 func slugifyModuleName(file os.File) string {
 	return slug.Make(humanizeModuleName(file))
+}
+
+func isValidCSSClass(class string) bool {
+	if s.HasPrefix(class, ".") {
+		return true
+	}
+	return false
+}
+
+func cssSelectorFromDefinition(rule string) string {
+	class := s.Split(rule, " {")
+	return class[0]
 }
 
 func readModule(file string, folder string) string {
