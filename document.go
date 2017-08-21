@@ -23,6 +23,7 @@ func writeHTML() string {
 		DocsContents: template.HTML(readDir()),
 		TocContents:  template.HTML(buildToc()),
 	}
+
 	partial := readModule("layout.html", "docs-templates")
 	tmpl, err := template.New("").Parse(partial)
 	checkErr(err)
