@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <title>purple3 Documentation</title>
+  <meta name="author" content="">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://www.herokucdn.com/purple3/latest/purple3.min.css">
+  <link rel="shortcut icon" type="image/x-icon" href="https://www.herokucdn.com/favicon.ico" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/color-brewer.min.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
+  <script src="https://cdn.rawgit.com/bendc/anchor-scroll/master/scroll.min.js"></script>
+
+  <style>
+    .content {
+      padding-left: 235px;
+    }
+
+    .sidebar, .content {
+      padding-top: 65px;
+    }
+
+    .header a:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="header bg-gradient-secondary w-100 db fixed z-1 shadow-outer-1 white f4 flex">
+    <a href="index.html" class="b white link flex items-center ph3">
+      <img src="images/purple-logo.svg" alt="">
+    </a>
+    <a href="documentation.html" class="b white link pv4 ph2">Documentation</a>
+    <a href="index.html" class="b white link pv4 ph2">Examples</a>
+    <a href="index.html" class="b white link pv4 ph2">Icon system</a>
+    <div class="flex-auto"></div>
+    <a href="index.html" class="b white link pv4 ph2">design.herokai.com</a>
+  </div>
+
+  <div class="">
+    <div class="sidebar w6 bg-white fixed bg-white top-0 bottom-0 shadow-outer-1">
+      <ul class="list ma0 pa0">
+        {{.TocContents}}
+      </ul>
+    </div>
+    <div class="content w-100 pa3 ph5-ns bg-white">
+      <h4 class="purple lh-copy measure-wide f3 fw4">Introduction</h4>
+      <p class="dark-gray lh-copy measure-wide f3">Purple3 is a CSS framework for all of Heroku's digital properties. Purple provides guidelines for the aesthetic, function, and form of user interfaces to provide a consistent experience for our customers. This is a living document and is under constant iteration.</p>
+
+      {{.DocsContents}}
+    </div>
+  </div>
+</body>
+</html>

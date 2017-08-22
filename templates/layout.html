@@ -15,21 +15,30 @@
   <script src="https://cdn.rawgit.com/bendc/anchor-scroll/master/scroll.min.js"></script>
 
   <style>
-    .content {
-      padding-left: 235px;
+    .sidebar, .content {
+      padding-top: 65px;
+    }
+
+    .header a:hover {
+      background-color: rgba(0,0,0,0.1);
     }
   </style>
 </head>
 <body>
+  <div class="header bg-gradient-secondary w-100 db fixed z-1 shadow-outer-1 white f4 flex">
+    <a href="index.html" class="b white link flex items-center ph3">
+      <img src="images/purple-logo.svg" alt="">
+    </a>
+    <a href="documentation.html" class="b white link pv4 ph2">Documentation</a>
+    <a href="index.html" class="b white link pv4 ph2">Examples</a>
+    <a href="index.html" class="b white link pv4 ph2">Icon system</a>
+    <div class="flex-auto"></div>
+    <a href="index.html" class="b white link pv4 ph2">design.herokai.com</a>
+  </div>
+
   <div class="">
-    <div class="sidebar w6 bg-white fixed bg-white top-0 bottom-0 shadow-outer-1">
-      <div class="ttu f6 gray ph2 pv1">Style guide</div>
-      <ul class="list ma0 pa0">
-        {{.TocContents}}
-      </ul>
-    </div>
     <div class="content w-100 pa3 ph5-ns bg-white">
-       {{.DocsContents}}
+      {{.DocsContents}}
     </div>
   </div>
 </body>

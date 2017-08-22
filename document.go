@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"html/template"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	s "strings"
@@ -24,11 +25,11 @@ func templateForClass(class string, template string) string {
 
 func documentClass(class string) string {
 	output := s.Trim(class, ".")
-	return "<pre class='bg-light-silver pa2 lh-copy'>" + output + "</pre>"
+	return "<pre class='lh-copy'>" + output + "</pre>"
 }
 
 func heading(text string, slug string) string {
-	return "<div class='mv5 bb b--light-gray' id='" + slug + "'></div><div class='mv4 f3 dark-gray'>" + text + "</div>"
+	return "<div class='mv5 bb b--light-gray' id='" + slug + "'></div><div class='purple lh-copy measure-wide f3 fw4'>" + text + "</div>"
 }
 
 func subheading(text string) string {
@@ -36,7 +37,7 @@ func subheading(text string) string {
 }
 
 func tocItem(text string, slug string) string {
-	return "<li><a class='db ph2 pv1 dark-gray link' href='#" + slug + "'>" + text + "</a></li>"
+	return "<li><a class='scroll db ph2 pv1 dark-gray link lh-copy hk-focus-ring hover-bg-lightest-silver' href='#" + slug + "'>" + text + "</a></li>"
 }
 
 func writeHTML() string {
@@ -45,7 +46,7 @@ func writeHTML() string {
 		TocContents:  template.HTML(makeTOC()),
 	}
 
-	partial := readModule("layout.html", "docs-templates")
+	partial := readModule("docs-layout.html", "templates")
 	tmpl, err := template.New("").Parse(partial)
 	checkErr(err)
 
@@ -64,4 +65,34 @@ func humanizeModuleName(file os.File) string {
 
 func slugifyModuleName(file os.File) string {
 	return slug.Make(humanizeModuleName(file))
+}
+
+func buildStaticSite() {
+	files, _ := ioutil.ReadDir("./src/")
+	for _, f := range files {
+		dat, err := ioutil.ReadFile("./src/" + f.Name())
+		outputFile, err := os.Create("./dist/" + filepath.Base(f.Name()))
+		fileBuffer := string(dat)
+
+		checkErr(err)
+
+		compiledPage := wrapStaticPage(fileBuffer)
+
+		outputFile.WriteString(compiledPage)
+		outputFile.Sync()
+	}
+}
+
+func wrapStaticPage(pageHTML string) string {
+	data := contents{
+		DocsContents: template.HTML(pageHTML),
+	}
+
+	partial := readModule("layout.html", "templates")
+	tmpl, err := template.New("").Parse(partial)
+	checkErr(err)
+
+	var tpl bytes.Buffer
+	tmpl.Execute(&tpl, data)
+	return tpl.String()
 }

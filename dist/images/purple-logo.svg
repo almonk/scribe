@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="25px" height="27px" viewBox="0 0 25 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <polygon id="path-1" points="5.47873264 0 10.9574653 3.23491939 10.9574653 9.70475816 5.47873264 12.9396776 0 9.70475816 0 3.23491939"></polygon>
+        <polygon id="path-3" points="6.5 0.0557353976 13 7.30133709 6.5 10.9241379 0 7.30133709"></polygon>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard" transform="translate(-18.000000, -11.000000)">
+            <g id="Group" transform="translate(18.000000, 11.000000)">
+                <circle id="Oval-12" fill="#FFFFFF" opacity="0.930153918" cx="18.5" cy="5.5" r="5.5"></circle>
+                <g id="Polygon-1" transform="translate(0.000000, 7.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use fill="#FFFFFF" xlink:href="#path-1"></use>
+                </g>
+                <g id="Polygon-1" transform="translate(12.000000, 16.000000)">
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <use fill="#FFFFFF" xlink:href="#path-3"></use>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

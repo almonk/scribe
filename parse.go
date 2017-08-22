@@ -9,6 +9,8 @@ import (
 	"os"
 	"regexp"
 	s "strings"
+
+	"github.com/russross/blackfriday"
 )
 
 var workingDirectory = ""
@@ -115,6 +117,7 @@ func parseModuleForDocs(filename os.FileInfo) string {
 		cssSelectorMatch := ".(.*?) {"
 
 		hasTemplate := s.Contains(section, "<template>")
+		hasMarkdown := s.Contains(section, "<md>")
 		hasSubSection, _ := regexp.MatchString(sectionNameMatch, section)
 
 		matchSectionName, _ := regexp.Compile(sectionNameMatch)
@@ -125,13 +128,20 @@ func parseModuleForDocs(filename os.FileInfo) string {
 
 		if hasTemplate {
 			if i == 1 {
-				fmt.Println("Found documentation module " + humanizeModuleName(*file))
+				fmt.Println("Found: " + humanizeModuleName(*file))
 				outputString = outputString + heading(humanizeModuleName(*file), slugifyModuleName(*file))
 			}
 
 			if hasSubSection {
 				// Has other scribe sections in the module
 				outputString = outputString + subheading(extractedSectionName[1])
+
+				if hasMarkdown {
+					fmt.Println("Found markdown")
+					md := getInnerSubstring(section, "<md>", "</md>")
+					compiledMd := blackfriday.MarkdownBasic([]byte(md))
+					outputString = outputString + string(compiledMd)
+				}
 			}
 
 			for index := range extractedCSSSelectors {
@@ -183,7 +193,7 @@ func makeTOC() string {
 					cssMap[noOfSection] = cssMap[noOfSection] + line + "\n"
 				}
 
-				if s.Contains(line, "@scribe nodoc") {
+				if s.Contains(line, "@scribe nodoc") || s.Contains(line, "@scribe end") {
 					isInScribeSection = false
 				}
 			}
@@ -204,15 +214,47 @@ func makeTOC() string {
 }
 
 func isValidCSSClass(class string) bool {
+
 	if s.HasPrefix(class, ".") {
+		// Standard css class
 		return true
 	}
+
+	if s.Contains(class, ",") {
+		// Multiple classes for this definition
+		classes := s.Split(class, ",")
+
+		for _, class := range classes {
+			class = s.TrimSpace(class)
+			if isValidCSSClass(class) {
+				return true
+			}
+		}
+	}
+
 	return false
 }
 
 func cssSelectorFromDefinition(rule string) string {
-	class := s.Split(rule, " {")
-	return class[0]
+	output := ""
+
+	if s.Contains(rule, ",") {
+		classes := s.Split(rule, ",")
+
+		for _, class := range classes {
+			sanitizedClassArr := s.Split(class, " {")
+			sanitizedClass := s.TrimSpace(sanitizedClassArr[0])
+
+			if isValidCSSClass(sanitizedClass) {
+				return sanitizedClass
+			}
+		}
+	} else {
+		class := s.Split(rule, " {")
+		output = s.TrimSpace(class[0])
+	}
+
+	return output
 }
 
 func readModule(file string, folder string) string {

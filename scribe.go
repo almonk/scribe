@@ -8,7 +8,7 @@ import (
 
 func main() {
 	inputDirPtr := flag.String("input", "myfile", "Folder containing css modules")
-	outputDoc := "docs/index.html"
+	outputDoc := "dist/documentation.html"
 	flag.Parse()
 
 	// Let's get this show on the road
@@ -19,6 +19,9 @@ func main() {
 
 	outputFile.WriteString(writeHTML())
 	outputFile.Sync()
+
+	// Now build the static pages
+	buildStaticSite()
 
 	fmt.Println("Docs generated at ./" + outputDoc)
 }
