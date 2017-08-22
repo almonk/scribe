@@ -9,11 +9,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://www.herokucdn.com/purple3/latest/purple3.min.css">
   <link rel="shortcut icon" type="image/x-icon" href="https://www.herokucdn.com/favicon.ico" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/color-brewer.min.css">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.9.0/highlight.min.js"></script>
   <script src="https://cdn.rawgit.com/bendc/anchor-scroll/master/scroll.min.js"></script>
-
   <style>
     .sidebar, .content {
       padding-top: 65px;
@@ -24,7 +21,7 @@
     }
   </style>
 </head>
-<body>
+<body class="bg-dark-gray">
   <div class="header bg-gradient-secondary w-100 db fixed z-1 shadow-outer-1 white f4 flex">
     <a href="index.html" class="b white link flex items-center ph3">
       <img src="images/purple-logo.svg" alt="">
@@ -36,10 +33,8 @@
     <a href="index.html" class="b white link pv4 ph2">design.herokai.com</a>
   </div>
 
-  <div class="">
-    <div class="content w-100 pa3 ph5-ns bg-white">
-      {{.DocsContents}}
-    </div>
+  <div class="content w-100 bg-white">
+    {{.DocsContents}}
   </div>
 </body>
 </html>
