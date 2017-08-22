@@ -3,14 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"html"
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 	"regexp"
 	s "strings"
-
-	"github.com/gosimple/slug"
 )
 
 var workingDirectory = ""
@@ -26,7 +24,7 @@ func readDir() string {
 	files, _ := ioutil.ReadDir(workingDirectory)
 	for _, f := range files {
 		if isValidModule(f.Name()) {
-			output = output + parseModule(f, false)
+			output = output + parseModuleForDocs(f)
 		}
 	}
 	return output
@@ -37,7 +35,7 @@ func buildToc() string {
 	files, _ := ioutil.ReadDir(workingDirectory)
 	for _, f := range files {
 		if isValidModule(f.Name()) {
-			output = output + parseModule(f, true)
+			output = output + parseModuleForDocs(f)
 		}
 	}
 	return output
@@ -81,7 +79,7 @@ func isOnBlocklist(filenameToCheck string) bool {
 	return false
 }
 
-func parseModule(filename os.FileInfo, justHeaders bool) string {
+func parseModuleForDocs(filename os.FileInfo) string {
 	outputString := ""
 
 	file, err := os.Open(workingDirectory + filename.Name())
@@ -90,7 +88,6 @@ func parseModule(filename os.FileInfo, justHeaders bool) string {
 
 	cssMap := make([]string, 1)
 	noOfSection := 0
-	noOfLines := 0
 	isInScribeSection := false
 
 	fileScanner := bufio.NewScanner(file)
@@ -111,46 +108,45 @@ func parseModule(filename os.FileInfo, justHeaders bool) string {
 		if s.Contains(line, "@scribe nodoc") {
 			isInScribeSection = false
 		}
-
-		noOfLines++
 	}
 
 	for i, section := range cssMap {
-		templateMatch := `<template>\s(.*?)\s</template>`
 		sectionNameMatch := `@scribe (.*?)\n`
-		// commentMatch := `\/\*(.*?)@scribe(.*?)\*\/`
-		cssSelectorMatch := ".(.*?) {.*?}"
+		cssSelectorMatch := ".(.*?) {"
 
-		hasTemplate, _ := regexp.MatchString(templateMatch, section)
+		hasTemplate := s.Contains(section, "<template>")
 		hasSubSection, _ := regexp.MatchString(sectionNameMatch, section)
 
 		matchSectionName, _ := regexp.Compile(sectionNameMatch)
 		extractedSectionName := matchSectionName.FindStringSubmatch(section)
-
-		matchTemplate, _ := regexp.Compile(templateMatch)
-		extractedTemplate := matchTemplate.FindStringSubmatch(section)
 
 		matchCSSSelector, _ := regexp.Compile(cssSelectorMatch)
 		extractedCSSSelectors := matchCSSSelector.FindAllString(section, -1)
 
 		if hasTemplate {
 			if i == 1 {
-				fmt.Println(humanizeModuleName(*file))
+				fmt.Println("Found documentation module " + humanizeModuleName(*file))
+				outputString = outputString + heading(humanizeModuleName(*file), slugifyModuleName(*file))
 			}
 
 			if hasSubSection {
 				// Has other scribe sections in the module
-				fmt.Println(extractedSectionName[1])
+				outputString = outputString + subheading(extractedSectionName[1])
 			}
-
-			fmt.Println(extractedTemplate[1])
 
 			for index := range extractedCSSSelectors {
 				// Loop thru every CSS selector
 				if isValidCSSClass(extractedCSSSelectors[index]) {
 					cssClass := cssSelectorFromDefinition(extractedCSSSelectors[index])
+					template := getInnerSubstring(section, "<template>", "</template>")
 
-					fmt.Println(cssClass)
+					outputString = outputString + documentClass(cssClass)
+					outputString = outputString +
+						"<div class='flex'><div class='w-50'>" +
+						templateForClass(cssClass, template) +
+						"</div><div class='w-50'><pre class='h3 ma0 overflow-auto gray'>" +
+						html.EscapeString(templateForClass(cssClass, template)) +
+						"</pre></div></div>"
 				}
 			}
 		}
@@ -159,16 +155,52 @@ func parseModule(filename os.FileInfo, justHeaders bool) string {
 	return outputString
 }
 
-func humanizeModuleName(file os.File) string {
-	cleanFileName := filepath.Base(file.Name())
-	replacer := s.NewReplacer("_", "", ".css", "", "-", " ")
-	output := replacer.Replace(cleanFileName)
-	output = s.Title(output)
-	return output
-}
+func makeTOC() string {
+	output := ""
+	files, _ := ioutil.ReadDir(workingDirectory)
+	for _, f := range files {
+		if isValidModule(f.Name()) {
+			file, err := os.Open(workingDirectory + f.Name())
+			checkErr(err)
+			defer file.Close()
 
-func slugifyModuleName(file os.File) string {
-	return slug.Make(humanizeModuleName(file))
+			cssMap := make([]string, 1)
+			noOfSection := 0
+			isInScribeSection := false
+
+			fileScanner := bufio.NewScanner(file)
+
+			for fileScanner.Scan() {
+				line := fileScanner.Text()
+
+				if s.Contains(line, "/*") {
+					isInScribeSection = true
+					cssMap = append(cssMap, "/* "+line+"\n")
+					noOfSection++
+				}
+
+				if isInScribeSection {
+					cssMap[noOfSection] = cssMap[noOfSection] + line + "\n"
+				}
+
+				if s.Contains(line, "@scribe nodoc") {
+					isInScribeSection = false
+				}
+			}
+
+			for i, section := range cssMap {
+				hasTemplate := s.Contains(section, "<template>")
+
+				if hasTemplate {
+					if i == 1 {
+						output = output + tocItem(humanizeModuleName(*file), slugifyModuleName(*file))
+					}
+				}
+			}
+		}
+	}
+
+	return output
 }
 
 func isValidCSSClass(class string) bool {
@@ -188,4 +220,37 @@ func readModule(file string, folder string) string {
 	checkErr(err)
 	fileBuffer := string(dat)
 	return fileBuffer
+}
+
+func getInnerSubstring(str string, prefix string, suffix string) string {
+	var beginIndex, endIndex int
+	beginIndex = s.Index(str, prefix)
+	if beginIndex == -1 {
+		beginIndex = 0
+		endIndex = 0
+	} else if len(prefix) == 0 {
+		beginIndex = 0
+		endIndex = s.Index(str, suffix)
+		if endIndex == -1 || len(suffix) == 0 {
+			endIndex = len(str)
+		}
+	} else {
+		beginIndex += len(prefix)
+		endIndex = s.Index(str[beginIndex:], suffix)
+		if endIndex == -1 {
+			if s.Index(str, suffix) < beginIndex {
+				endIndex = beginIndex
+			} else {
+				endIndex = len(str)
+			}
+		} else {
+			if len(suffix) == 0 {
+				endIndex = len(str)
+			} else {
+				endIndex += beginIndex
+			}
+		}
+	}
+
+	return str[beginIndex:endIndex]
 }
