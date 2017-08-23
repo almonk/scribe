@@ -16,7 +16,7 @@ Documenting CSS is hard. It normally involves a lot of manual maintenance and ed
 
 The simplest possible Scribe block consists of the **@scribe **keyword and a **<template>:**
 
-```
+```css
 /*
 @scribe Text colors
 
@@ -32,11 +32,12 @@ The simplest possible Scribe block consists of the **@scribe **keyword and a **<
 .blue {
    text-color: blue;
 }
+*/
 ```
 
 Running Scribe on this file will produce the following HTML:
 
-```
+```html
 <span class="red">Hello</span>
 <span class="blue">Hello</span>
 ```
@@ -53,7 +54,7 @@ Multiple Scribe blocks can be inserted into a CSS document. Scribe will document
 
 For example; we want to document our green text color on a black background to make it easier to read.
 
-```
+```css
 /*
 @scribe Text colors
 
@@ -87,7 +88,7 @@ For example; we want to document our green text color on a black background to m
 
 The HTML produced now will be;
 
-```
+```html
 <span class="red">Hello</span>
 <span class="blue">Hello</span>
 <div class="bg-black">
@@ -103,7 +104,7 @@ Scribe allows you to write Markdown as part of the Scribe block which will be pa
 
 Write your markdown between `<md>` tags like so;
 
-```
+```css
 /*
 @scribe Text colors
 
@@ -129,7 +130,7 @@ Be careful not to indent your markdown as indentation has special meaning to the
 
 We've documented three of our text colors but we still have another two in our file that we don't want to document yet. Let's stop Scribe from reading them with a `/* @scribe nodoc */` comment block.
 
-```
+```css
 /*
 @scribe Text colors
 
@@ -169,6 +170,7 @@ We've documented three of our text colors but we still have another two in our f
 .orange {
     text-color: orange;
 }
+*/
 ```
 
 
