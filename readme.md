@@ -32,7 +32,6 @@ The simplest possible Scribe block consists of the `@scribe` keyword and `<templ
 .blue {
    text-color: blue;
 }
-*/
 ```
 
 Running Scribe on this file will produce the following HTML:
@@ -170,7 +169,6 @@ We've documented three of our text colors but we still have another two in our f
 .orange {
     text-color: orange;
 }
-*/
 ```
 
 
