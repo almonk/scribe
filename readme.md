@@ -14,7 +14,7 @@ Documenting CSS is hard. It normally involves a lot of manual maintenance and ed
 
 ### INTRODUCTION
 
-The simplest possible Scribe block consists of the **@scribe** keyword and a **<template>:**
+The simplest possible Scribe block consists of the `@scribe` keyword and `<template>`:
 
 ```css
 /*
