@@ -135,13 +135,12 @@ func parseModuleForDocs(filename os.FileInfo) string {
 			if hasSubSection {
 				// Has other scribe sections in the module
 				outputString = outputString + subheading(extractedSectionName[1])
+			}
 
-				if hasMarkdown {
-					fmt.Println("Found markdown")
-					md := getInnerSubstring(section, "<md>", "</md>")
-					compiledMd := blackfriday.MarkdownBasic([]byte(md))
-					outputString = outputString + "<div class='dark-gray lh-copy measure-wide'>" + string(compiledMd) + "</div>"
-				}
+			if hasMarkdown {
+				md := getInnerSubstring(section, "<md>", "</md>")
+				compiledMd := blackfriday.MarkdownBasic([]byte(md))
+				outputString = outputString + "<div class='dark-gray lh-copy measure-wide'>" + string(compiledMd) + "</div>"
 			}
 
 			for index := range extractedCSSSelectors {
