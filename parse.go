@@ -140,7 +140,7 @@ func parseModuleForDocs(filename os.FileInfo) string {
 					fmt.Println("Found markdown")
 					md := getInnerSubstring(section, "<md>", "</md>")
 					compiledMd := blackfriday.MarkdownBasic([]byte(md))
-					outputString = outputString + string(compiledMd)
+					outputString = outputString + "<div class='dark-gray lh-copy measure-wide'>" + string(compiledMd) + "</div>"
 				}
 			}
 
@@ -150,6 +150,7 @@ func parseModuleForDocs(filename os.FileInfo) string {
 					cssClass := cssSelectorFromDefinition(extractedCSSSelectors[index])
 					template := getInnerSubstring(section, "<template>", "</template>")
 
+					// TODO: Remove inline html
 					outputString = outputString + documentClass(cssClass)
 					outputString = outputString +
 						"<div class='flex'><div class='w-50'>" +
