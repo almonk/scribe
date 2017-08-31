@@ -154,9 +154,9 @@ func parseModuleForDocs(filename os.FileInfo) string {
 					outputString = outputString +
 						"<div class='flex'><div class='w-50'>" +
 						templateForClass(cssClass, template) +
-						"</div><div class='w-50'><pre class='h3 ma0 overflow-auto gray'>" +
+						"</div><div class='w-50'><pre class='ml2 mt0 ba b--light-gray br2 lh-copy w-100 overflow-x-scroll'><code class='html'>" +
 						html.EscapeString(templateForClass(cssClass, template)) +
-						"</pre></div></div>"
+						"</code></pre></div></div>"
 				}
 			}
 		}
