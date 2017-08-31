@@ -71,7 +71,7 @@ func buildStaticSite() {
 	files, _ := ioutil.ReadDir("./src/")
 	for _, f := range files {
 		dat, err := ioutil.ReadFile("./src/" + f.Name())
-		outputFile, err := os.Create("./dist/" + filepath.Base(f.Name()))
+		outputFile, err := os.Create("./public_html/" + filepath.Base(f.Name()))
 		fileBuffer := string(dat)
 
 		checkErr(err)

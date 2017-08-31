@@ -8,7 +8,7 @@ import (
 
 func main() {
 	inputDirPtr := flag.String("input", "myfile", "Folder containing css modules")
-	outputDoc := "dist/documentation.html"
+	outputDoc := "public_html/documentation.html"
 	flag.Parse()
 
 	// Let's get this show on the road
