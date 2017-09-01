@@ -20,6 +20,9 @@ func main() {
 	outputFile.WriteString(writeHTML())
 	outputFile.Sync()
 
+	// Now build the table of styles
+	buildToS()
+
 	// Now build the static pages
 	buildStaticSite()
 

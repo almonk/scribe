@@ -8,6 +8,7 @@ import (
 	"path/filepath"
 	s "strings"
 
+	"github.com/almonk/css"
 	"github.com/gosimple/slug"
 )
 
@@ -95,4 +96,29 @@ func wrapStaticPage(pageHTML string) string {
 	var tpl bytes.Buffer
 	tmpl.Execute(&tpl, data)
 	return tpl.String()
+}
+
+func buildToS() {
+	distFile := readModule("purple3.css", workingDirectory+"../dist/")
+	outputFile, err := os.Create("./src/styles-matrix.html")
+	checkErr(err)
+
+	ss := css.Parse(distFile)
+	rules := ss.GetCSSRuleList()
+
+	outputFile.WriteString("<table class='w-100 ma2 f4 lh-copy'>")
+
+	for _, rule := range rules {
+		outputFile.WriteString("<tr><td class='w-50 bb b--silver v-top'><pre class='measure'>" + rule.Style.SelectorText + "</pre></td><td class='w-50 bb b--silver v-top'><pre class='measure truncate'>")
+
+		for _, style := range rule.Style.Styles {
+			outputFile.WriteString(style.Property + ": " + style.Value + "<br/>")
+		}
+
+		outputFile.WriteString("</pre></div></td></tr>")
+	}
+
+	outputFile.WriteString("</table>")
+
+	outputFile.Sync()
 }
