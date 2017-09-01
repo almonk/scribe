@@ -11,6 +11,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="https://www.herokucdn.com/favicon.ico" />
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://cdn.rawgit.com/bendc/anchor-scroll/master/scroll.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
   <style>
     .sidebar, .content {
       padding-top: 56px;
@@ -26,7 +27,8 @@
     <a href="index.html" class="b white link flex items-center ph3">
       <img src="images/purple-logo.svg" alt="">
     </a>
-    <a href="documentation.html" class="b white link pv4 ph2">Docs</a>
+    <a href="documentation.html" class="b white link pv4 ph2">Style guide</a>
+    <a href="glossary.html" class="b white link pv4 ph2">Glossary</a>
     <a href="examples.html" class="b white link pv4 ph2">Examples</a>
     <a href="https://hk-malibu.herokuapp.com" class="b white link pv4 ph2">Icon system</a>
     <div class="flex-auto"></div>
@@ -111,5 +113,9 @@
   });
 </script>
   </div>
+
+  <script>
+  var classesList = new List('list-search', options);
+  </script>
 </body>
 </html>

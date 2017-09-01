@@ -100,22 +100,22 @@ func wrapStaticPage(pageHTML string) string {
 
 func buildToS() {
 	distFile := readModule("purple3.css", workingDirectory+"../dist/")
-	outputFile, err := os.Create("./src/styles-matrix.html")
+	outputFile, err := os.Create("./src/glossary.html")
 	checkErr(err)
 
 	ss := css.Parse(distFile)
 	rules := ss.GetCSSRuleList()
 
-	outputFile.WriteString("<table class='w-100 ma2 f4 lh-copy'>")
+	outputFile.WriteString("<table class='w-100 f4 lh-copy'><tbody>")
 
 	for _, rule := range rules {
-		outputFile.WriteString("<tr><td class='w-50 bb b--silver v-top'><pre class='measure'>" + rule.Style.SelectorText + "</pre></td><td class='w-50 bb b--silver v-top'><pre class='measure truncate'>")
+		outputFile.WriteString("<tr><td class='ph2 w-50 bb b--silver v-top'><pre class='measure'>" + rule.Style.SelectorText + "</pre></td><td class='ph2 w-50 bb b--silver v-top'><pre class='measure truncate'>")
 
 		for _, style := range rule.Style.Styles {
 			outputFile.WriteString(style.Property + ": " + style.Value + "<br/>")
 		}
 
-		outputFile.WriteString("</pre></div></td></tr>")
+		outputFile.WriteString("</pre></div></td></tr></tbody>")
 	}
 
 	outputFile.WriteString("</table>")
