@@ -106,13 +106,22 @@ func buildToS() {
 	ss := css.Parse(distFile)
 	rules := ss.GetCSSRuleList()
 
+	outputFile.WriteString(`
+	<div class="ml2">
+		<h4 class="purple lh-copy measure-wide f3 fw4">Glossary of styles</h4>
+		<div class="dark-gray lh-copy measure-wide">
+			<p>A list of all classes and their properties in purple3</p>
+		</div>
+	</div>
+	`)
+
 	outputFile.WriteString("<table class='w-100 f4 lh-copy'><tbody>")
 
 	for _, rule := range rules {
-		outputFile.WriteString("<tr><td class='ph2 w-50 bb b--silver v-top'><pre class='measure'>" + rule.Style.SelectorText + "</pre></td><td class='ph2 w-50 bb b--silver v-top'><pre class='measure truncate'>")
+		outputFile.WriteString("<tr><td class='ph2 w-50 bb b--silver v-top'><pre class='measure dark-gray'>" + rule.Style.SelectorText + "</pre></td><td class='ph2 w-50 bb b--silver v-top'><pre class='measure truncate'>")
 
 		for _, style := range rule.Style.Styles {
-			outputFile.WriteString(style.Property + ": " + style.Value + "<br/>")
+			outputFile.WriteString("<span class='purple'>" + style.Property + "</span>: <span class='dark-green'>" + style.Value + "</span><br/>")
 		}
 
 		outputFile.WriteString("</pre></div></td></tr></tbody>")
