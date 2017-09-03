@@ -121,7 +121,7 @@ func buildToS() {
 		outputFile.WriteString("<tr><td class='ph2 w-50 bb b--silver v-top'><pre class='measure dark-gray'>" + rule.Style.SelectorText + "</pre></td><td class='ph2 w-50 bb b--silver v-top'><pre class='measure truncate'>")
 
 		for _, style := range rule.Style.Styles {
-			outputFile.WriteString("<span class='purple'>" + style.Property + "</span>: <span class='dark-green'>" + style.Value + "</span><br/>")
+			outputFile.WriteString("<span class='purple'>" + style.Property + "</span>: <span class='blue'>" + style.Value + "</span><br/>")
 		}
 
 		outputFile.WriteString("</pre></div></td></tr></tbody>")
