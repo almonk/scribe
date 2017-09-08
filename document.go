@@ -78,7 +78,6 @@ func buildStaticSite() {
 		checkErr(err)
 
 		compiledPage := wrapStaticPage(fileBuffer)
-
 		outputFile.WriteString(compiledPage)
 		outputFile.Sync()
 	}

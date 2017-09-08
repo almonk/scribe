@@ -10,6 +10,23 @@ Documenting CSS is hard. It normally involves a lot of manual maintenance and ed
 
 * * *
 
+## Getting started
+
+### Running Scribe locally
+
+```
+git clone git@github.com:heroku/scribe.git
+cd scribe
+curl https://getcaddy.com | bash
+caddy
+```
+
+### Generating new documentation
+
+```
+./scribe --input=/Path/To/purple3/src/
+```
+
 ## Syntax
 
 ### INTRODUCTION
