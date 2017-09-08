@@ -38,7 +38,7 @@ func subheading(text string) string {
 }
 
 func tocItem(text string, slug string) string {
-	return "<li><a class='scroll db ph2 pv1 dark-gray link lh-copy hk-focus-ring hover-bg-lightest-silver' href='#" + slug + "'>" + text + "</a></li>"
+	return "<li><a class='scroll db ph2 pv1 dark-gray link lh-copy hk-focus-ring hover-bg-silver' href='#" + slug + "'>" + text + "</a></li>"
 }
 
 func writeHTML() string {
