@@ -12,16 +12,16 @@ Documenting CSS is hard. It normally involves a lot of manual maintenance and ed
 
 ## Getting started
 
-### Running Scribe locally
+### Serving Scribe locally
 
 ```
 git clone git@github.com:heroku/scribe.git
 cd scribe
-curl https://getcaddy.com | bash
-caddy
+brew install devd
+devd -ol public_html
 ```
 
-### Generating new documentation
+### Generating new documentation/rebuilding docs
 
 ```
 ./scribe --input=/Path/To/purple3/src/
