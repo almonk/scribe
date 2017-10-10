@@ -7,8 +7,16 @@ import (
 )
 
 func main() {
+	// Get current working path
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Println("Working from " + pwd + "...")
+
 	inputDirPtr := flag.String("input", "myfile", "Folder containing css modules")
-	outputDoc := "public_html/documentation.html"
+	outputDoc := pwd + "/public_html/documentation.html"
 	glossaryFilePtr := flag.String("glossary", "", "File to compile glossary from")
 	flag.Parse()
 

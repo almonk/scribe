@@ -47,7 +47,7 @@ func writeHTML() string {
 		TocContents:  template.HTML(makeTOC()),
 	}
 
-	partial := readModule("docs-layout.html", "templates")
+	partial := readModule("docs-layout.html", "scribe/templates")
 	tmpl, err := template.New("").Parse(partial)
 	checkErr(err)
 
@@ -69,9 +69,9 @@ func slugifyModuleName(file os.File) string {
 }
 
 func buildStaticSite() {
-	files, _ := ioutil.ReadDir("./src/")
+	files, _ := ioutil.ReadDir("./scribe/pages/")
 	for _, f := range files {
-		dat, err := ioutil.ReadFile("./src/" + f.Name())
+		dat, err := ioutil.ReadFile("./scribe/pages/" + f.Name())
 		outputFile, err := os.Create("./public_html/" + filepath.Base(f.Name()))
 		fileBuffer := string(dat)
 
@@ -88,7 +88,7 @@ func wrapStaticPage(pageHTML string) string {
 		DocsContents: template.HTML(pageHTML),
 	}
 
-	partial := readModule("layout.html", "templates")
+	partial := readModule("layout.html", "scribe/templates")
 	tmpl, err := template.New("").Parse(partial)
 	checkErr(err)
 
@@ -99,7 +99,7 @@ func wrapStaticPage(pageHTML string) string {
 
 func buildToS(glossaryFile string) {
 	distFile := readFile(glossaryFile)
-	outputFile, err := os.Create("./src/glossary.html")
+	outputFile, err := os.Create("./scribe/pages/glossary.html")
 	checkErr(err)
 
 	ss := css.Parse(distFile)

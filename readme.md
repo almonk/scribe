@@ -23,13 +23,21 @@ devd -ol public_html
 
 ### Generating new documentation/rebuilding docs
 
+First off, move scribe into your $PATH.
+
 ```
-./scribe --input=/Path/To/library/src/
+ln -s bin/scribe /usr/local/bin/scribe
+```
+
+When run, Scribe will look for a folder in the current directory called `/scribe`. This directory should contain two folders - `templates` and `pages`.
+
+```
+scribe --input=/Path/To/library/src/
 ```
 
 ### To add a glossary
 ```
-./scribe --input=/Path/To/library/src/ --glossary=/Path/To/library/dist/library.css
+scribe --input=/Path/To/library/src/ --glossary=/Path/To/library/dist/library.css
 ```
 
 ## Syntax
@@ -191,4 +199,12 @@ We've documented three of our text colors but we still have another two in our f
 .orange {
     text-color: orange;
 }
+```
+
+## Working on Scribe
+
+To build a new binary:
+
+```
+go build -o bin/scribe
 ```
