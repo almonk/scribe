@@ -97,8 +97,8 @@ func wrapStaticPage(pageHTML string) string {
 	return tpl.String()
 }
 
-func buildToS() {
-	distFile := readModule("purple3.css", workingDirectory+"../dist/")
+func buildToS(glossaryFile string) {
+	distFile := readFile(glossaryFile)
 	outputFile, err := os.Create("./src/glossary.html")
 	checkErr(err)
 
@@ -109,7 +109,7 @@ func buildToS() {
 	<div class="ml2">
 		<h4 class="purple lh-copy measure-wide f3 fw4">Glossary of styles</h4>
 		<div class="dark-gray lh-copy measure-wide">
-			<p>A list of all classes and their properties in purple3</p>
+			<p>A list of all classes and their properties</p>
 		</div>
 	</div>
 	`)

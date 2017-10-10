@@ -24,7 +24,12 @@ devd -ol public_html
 ### Generating new documentation/rebuilding docs
 
 ```
-./scribe --input=/Path/To/purple3/src/
+./scribe --input=/Path/To/library/src/
+```
+
+### To add a glossary
+```
+./scribe --input=/Path/To/library/src/ --glossary=/Path/To/library/dist/library.css
 ```
 
 ## Syntax
@@ -129,7 +134,7 @@ Write your markdown between `<md>` tags like so;
 This is a paragraph
 
 * This
-* Is 
+* Is
 * A
 * List
 </md>
@@ -187,7 +192,3 @@ We've documented three of our text colors but we still have another two in our f
     text-color: orange;
 }
 ```
-
-
-
-
