@@ -264,6 +264,13 @@ func readModule(file string, folder string) string {
 	return fileBuffer
 }
 
+func readFile(file string) string {
+	dat, err := ioutil.ReadFile(file)
+	checkErr(err)
+	fileBuffer := string(dat)
+	return fileBuffer
+}
+
 func getInnerSubstring(str string, prefix string, suffix string) string {
 	var beginIndex, endIndex int
 	beginIndex = s.Index(str, prefix)

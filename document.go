@@ -47,7 +47,7 @@ func writeHTML() string {
 		TocContents:  template.HTML(makeTOC()),
 	}
 
-	partial := readModule("docs-layout.html", "templates")
+	partial := readModule("docs-layout.html", "scribe/templates")
 	tmpl, err := template.New("").Parse(partial)
 	checkErr(err)
 
@@ -69,9 +69,9 @@ func slugifyModuleName(file os.File) string {
 }
 
 func buildStaticSite() {
-	files, _ := ioutil.ReadDir("./src/")
+	files, _ := ioutil.ReadDir("./scribe/pages/")
 	for _, f := range files {
-		dat, err := ioutil.ReadFile("./src/" + f.Name())
+		dat, err := ioutil.ReadFile("./scribe/pages/" + f.Name())
 		outputFile, err := os.Create("./public_html/" + filepath.Base(f.Name()))
 		fileBuffer := string(dat)
 
@@ -88,7 +88,7 @@ func wrapStaticPage(pageHTML string) string {
 		DocsContents: template.HTML(pageHTML),
 	}
 
-	partial := readModule("layout.html", "templates")
+	partial := readModule("layout.html", "scribe/templates")
 	tmpl, err := template.New("").Parse(partial)
 	checkErr(err)
 
@@ -97,9 +97,9 @@ func wrapStaticPage(pageHTML string) string {
 	return tpl.String()
 }
 
-func buildToS() {
-	distFile := readModule("purple3.css", workingDirectory+"../dist/")
-	outputFile, err := os.Create("./src/glossary.html")
+func buildToS(glossaryFile string) {
+	distFile := readFile(glossaryFile)
+	outputFile, err := os.Create("./scribe/pages/glossary.html")
 	checkErr(err)
 
 	ss := css.Parse(distFile)
@@ -109,7 +109,7 @@ func buildToS() {
 	<div class="ml2">
 		<h4 class="purple lh-copy measure-wide f3 fw4">Glossary of styles</h4>
 		<div class="dark-gray lh-copy measure-wide">
-			<p>A list of all classes and their properties in purple3</p>
+			<p>A list of all classes and their properties</p>
 		</div>
 	</div>
 	`)
